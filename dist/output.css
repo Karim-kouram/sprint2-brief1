@@ -560,7 +560,7 @@ video {
   height: 3rem;
   border-radius: 0.75rem;
   --tw-bg-opacity: 1;
-  background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));
+  background-color: rgb(227 53 13 / var(--tw-bg-opacity, 1));
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   font-weight: 700;
@@ -849,7 +849,7 @@ video {
 
 .bg-brand {
   --tw-bg-opacity: 1;
-  background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));
+  background-color: rgb(227 53 13 / var(--tw-bg-opacity, 1));
 }
 
 .bg-brand-light {
@@ -1080,6 +1080,10 @@ video {
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .md\:gap-5 {
+    gap: 1.25rem;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -1096,6 +1100,20 @@ video {
   }
 
   .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:flex {
+    display: flex;
+  }
+
+  .xl\:grid {
+    display: grid;
+  }
+
+  .xl\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
