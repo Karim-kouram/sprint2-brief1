@@ -16,4 +16,34 @@
 //
 // Pensez à citer la source de vos images dans le README.
 
-const creatures = [];
+export const creatures = [];
+
+const response = await fetch(
+  "https://pokeapi.co/api/v2/pokemon?limit=9"
+);
+
+const data = await response.json();
+
+for (const pokemon of data.results) {
+  const res = await fetch(pokemon.url);
+  const details = await res.json();
+
+  creatures.push({
+    id: `#${String(details.id).padStart(3, "0")}`,
+    name: details.name,
+    type: details.types[0].type.name,
+    level: "Base",
+
+    stats: {
+      hp: details.stats[0].base_stat,
+      attack: details.stats[1].base_stat,
+      defence: details.stats[2].base_stat
+    },
+
+    image: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(details.id).padStart(3, "0")}.png`,
+
+    description: `Pokémon ${details.name}`
+  });
+}
+
+
