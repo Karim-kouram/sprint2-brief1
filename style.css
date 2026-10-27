@@ -15,3 +15,17 @@ button[type="submit"]:disabled {
     border: none;
     box-shadow: none;
 }
+
+.btn-add-team:disabled {
+    background-color: #9ca3af;
+    color: #e5e7eb;
+    cursor: not-allowed;
+    opacity: 0.6;
+    border: none;
+    box-shadow: none;
+}
+.active {
+    background-color: black;
+    color: #ffffff;
+    border: 1px solid #ffff;
+}

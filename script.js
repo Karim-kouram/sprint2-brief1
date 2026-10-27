@@ -5,6 +5,304 @@
 // Écrivez votre code ici, fonctionnalité par fonctionnalité.
 // Une carte GitHub Projects et au moins un commit par fonctionnalité.
 
+
+
+
+// -------------------------------------------------------------
+// 1. AFFICHAGE
+// Supprimez les cartes écrites à la main dans index.html et
+// construisez la grille à partir du tableau `creatures`.
+// -------------------------------------------------------------
+import { creatures } from "./data.js";
+
+let section = document.getElementById("grid");
+const AFFICHAGE = (Tableau) =>{
+    Tableau.forEach((pokemon) => {
+        const article = document.createElement("article");
+
+    article.dataset.id = pokemon.id;
+    article.className = "card flex flex-col gap-3 rounded-card bg-white p-3 pb-4 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg";
+
+    const typeColors = {
+    fire: "bg-red-500 text-white",
+    water: "bg-blue-500 text-white",
+    grass: "bg-green-500 text-white",
+    electric: "bg-yellow-400 text-black",
+    ice: "bg-cyan-300 text-black",
+    dark: "bg-gray-800 text-white",
+    poison: "bg-purple-500 text-white",
+    flying: "bg-sky-300 text-black",
+    bug: "bg-lime-500 text-black",
+    normal: "bg-stone-400 text-black",
+    fighting: "bg-orange-600 text-white",
+    psychic: "bg-pink-500 text-white",
+    ground: "bg-amber-600 text-white",
+    rock: "bg-yellow-700 text-white",
+    ghost: "bg-violet-800 text-white",
+    dragon: "bg-indigo-600 text-white",
+    steel: "bg-slate-400 text-black",
+    fairy: "bg-pink-300 text-black"
+};
+
+const typeColor = typeColors[pokemon.type] || "bg-gray-200 text-black";
+
+
+    article.innerHTML = `
+    <div class="relative flex h-36 items-center justify-center rounded-xl bg-brand-light">
+            <img src="${pokemon.image}" alt="logo" class="h-[150px] w-[150px] text-muted">
+            <span class="absolute left-3 top-2 font-mono text-sm text-muted">${pokemon.id}</span>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="font-display text-xl font-semibold">${pokemon.name}</h3>
+            <span class="rounded-full px-3 py-1 text-sm font-bold ${typeColor}">${pokemon.type}</span>
+          </div>
+          <p class="text-sm text-muted">${pokemon.level} · Total 309</p>
+            <button type="button" class="btn-add-team btn-outline hover:bg-yellow-400 hover:text-black hover:border-red-600  hover:shadow-lg transition-all duration-300">
+                Ajouter à l'équipe
+            </button>`;
+
+    section.append(article);
+
+    })
+}
+AFFICHAGE(creatures);
+
+
+// -------------------------------------------------------------
+// 2. DÉTAIL
+// Un clic sur une carte ouvre le panneau de détail :
+// image, description, et statistiques affichées en barres.
+// -------------------------------------------------------------
+
+const Section = document.getElementById("detail");
+const cardsSection = document.getElementById("grid");
+const team = document.getElementById("team");
+
+Section.innerHTML = `
+        <div class="text-center">
+            <p class="font-display text-xl font-extrabold">
+                Aucun Pokémon sélectionné.
+            </p>
+        </div>
+    `;
+
+
+function afficherDetail(pokemon) {
+
+    const typeColors = {
+    fire: "bg-red-500 text-white",
+    water: "bg-blue-500 text-white",
+    grass: "bg-green-500 text-white",
+    electric: "bg-yellow-400 text-black",
+    ice: "bg-cyan-300 text-black",
+    dark: "bg-gray-800 text-white",
+    poison: "bg-purple-500 text-white",
+    flying: "bg-sky-300 text-black",
+    bug: "bg-lime-500 text-black",
+    normal: "bg-stone-400 text-black",
+    fighting: "bg-orange-600 text-white",
+    psychic: "bg-pink-500 text-white",
+    ground: "bg-amber-600 text-white",
+    rock: "bg-yellow-700 text-white",
+    ghost: "bg-violet-800 text-white",
+    dragon: "bg-indigo-600 text-white",
+    steel: "bg-slate-400 text-black",
+    fairy: "bg-pink-300 text-black"
+};
+
+const typeColor = typeColors[pokemon.type] || "bg-gray-200 text-black";
+
+    Section.innerHTML = `
+    <article data-id="${pokemon.id}" class="card"> 
+        <div class="flex items-center justify-between">
+            <span class="font-mono text-sm text-muted">${pokemon.id} · Détail</span>
+            <button type="button" aria-label="Fermer le détail"
+                class="Annule btn-outline w-11 px-0">✕</button>
+        </div>
+
+        <div class="flex h-[155px] items-center justify-center rounded-2xl bg-brand-light">
+            <img src="${pokemon.image}" alt="${pokemon.name}"
+                class="h-[170px] w-[170px] object-contain">
+        </div>
+
+        <div class="flex items-center justify-between">
+            <h2 class="font-display text-3xl font-extrabold">${pokemon.name}</h2>
+            <span class="rounded-full px-3 py-1 text-sm font-bold ${typeColor}">${pokemon.type}</span>
+        </div>
+
+        <p class="text-gray-700">${pokemon.description}.</p>
+
+        <div class="flex flex-col gap-2 text-sm">
+            <div class="grid grid-cols-[80px_1fr_40px] items-center gap-2">
+                <span class="font-bold">PV</span>
+                <span class="h-3 rounded-full bg-ground">
+                    <span class="block h-3 rounded-full bg-brand"
+                        style="width:${pokemon.stats.hp}%;"></span>
+                </span>
+                <span class="text-right font-mono">${pokemon.stats.hp}</span>
+            </div>
+
+            <div class="grid grid-cols-[80px_1fr_40px] items-center gap-2">
+                <span class="font-bold">Attaque</span>
+                <span class="h-3 rounded-full bg-ground">
+                    <span class="block h-3 rounded-full bg-brand"
+                        style="width:${pokemon.stats.attack}%;"></span>
+                </span>
+                <span class="text-right font-mono">${pokemon.stats.attack}</span>
+            </div>
+
+            <div class="grid grid-cols-[80px_1fr_40px] items-center gap-2">
+                <span class="font-bold">Défense</span>
+                <span class="h-3 rounded-full bg-ground">
+                    <span class="block h-3 rounded-full bg-brand"
+                        style="width:${pokemon.stats.defence}%;"></span>
+                </span>
+                <span class="text-right font-mono">${pokemon.stats.defence}</span>
+            </div>
+        </div>
+
+        <button type="button" class="btn-add-team btn-primary">Ajouter à l'équipe</button>
+    </article>`;
+}
+
+function fermerDetail() {
+    Section.innerHTML = `
+        <div class="text-center">
+            <p class="font-display text-xl font-extrabold">
+                Aucun Pokémon sélectionné.
+            </p>
+        </div>
+    `;
+
+    document.querySelectorAll(".card.active").forEach(card => {
+        card.classList.remove("active");
+    });
+}
+
+// Événement sur les cards : anciennes et nouvelles
+cardsSection.addEventListener("click", function(e) {
+    const card = e.target.closest(".card");
+
+    if (!card || !cardsSection.contains(card)) return;
+
+    const id = card.dataset.id;
+    const pokemon = creatures.find(p => p.id === id);
+
+    if (!pokemon) return;
+
+    if (e.target.closest(".btn-add-team")) {
+        AfficherEquipe(pokemon);
+        requestAnimationFrame(updateTeamButtons);
+        return;
+    };
+
+    const isActive = card.classList.contains("active");
+
+    document.querySelectorAll(".card.active").forEach(a => {
+        a.classList.remove("active");
+    });
+
+    if (isActive) {
+        fermerDetail();
+    } else {
+        card.classList.add("active");
+        afficherDetail(pokemon);
+    }
+});
+// État initial
+updateTeamButtons();
+
+// Événement du bouton fermer
+Section.addEventListener("click", function(e) {
+
+     if (e.target.closest(".Annule")) {
+        fermerDetail();
+        return;
+
+    }
+
+    const button = e.target.closest(".btn-add-team");
+    
+    if (!button) return;
+    
+    const article = e.target.closest(".card");
+
+    if (!article || !Section.contains(article)) return;
+
+    const id = article.dataset.id;
+    const pokemon = creatures.find(p => p.id === id);
+
+    if (!pokemon) return;
+
+    const count = document.querySelectorAll("#team article").length;
+
+    if (count >= 6) {
+        button.disabled = true;
+        return;
+    }
+
+   AfficherEquipe(pokemon);
+   updateTeamButtons();
+
+    // تحديث حالة الزر
+    const newCount = document.querySelectorAll("#team article").length;
+
+    if (newCount >= 6) {
+        button.disabled = true;
+    }
+
+});
+
+
+
+// -------------------------------------------------------------
+// 3. RECHERCHE
+// La liste se met à jour pendant la saisie d'un nom
+// (sans tenir compte des majuscules).
+// -------------------------------------------------------------
+let searchNom = document.getElementById("search");
+searchNom.addEventListener("input", function(){
+    let newTableau = creatures.filter((pokemon) => pokemon.name.toLowerCase().includes(searchNom.value.toLowerCase()));
+    section.innerHTML = "";
+    AFFICHAGE(newTableau);
+})
+
+let filterType = document.getElementById("filters");
+filterType.addEventListener("click", function(e) {
+    const button = e.target.closest(".chip");
+    filterType.querySelectorAll("button[type='button']").forEach(a => {
+        a.classList.remove("active");
+    });
+
+    if (!button) return;
+    const type = button.textContent.toLowerCase();
+    if (type == "tous") {
+        section.innerHTML = "";
+        AFFICHAGE(creatures) 
+        button.classList.add("active");
+        return;
+
+    }
+    let newTableau = creatures.filter((pokemon) => pokemon.type.toLowerCase() == type);
+    section.innerHTML = "";
+    AFFICHAGE(newTableau);
+    button.classList.add("active");
+
+});
+// -------------------------------------------------------------
+// 4. FILTRE
+// Les boutons de type n'affichent que les créatures de ce type ;
+// « Tous » réinitialise le filtre.
+// La recherche et le filtre fonctionnent ENSEMBLE.
+// -------------------------------------------------------------
+
+
+// -------------------------------------------------------------
+// 5. CRÉER UNE CRÉATURE
+// Validez chaque champ du formulaire avec une expression régulière
+// (voir le tableau du brief). Affichez le message d'erreur sous le
+// champ, et n'ajoutez jamais une créature invalide.
+// -------------------------------------------------------------
 const form = document.getElementById("creature-form");
 
 // Expressions régulières
@@ -44,7 +342,7 @@ form.addEventListener("input", function() {
     // Validation du nom
     if (!regex_nom.test(name.value)) {
         name.style.border = "2px solid red";
-        errorMessage[1].textContent = "nom invalide (exemple : #001)";
+        errorMessage[1].textContent = "nom invalide .";
         notValide = true;
     } else {
         name.style.border = "2px solid green";
@@ -116,123 +414,202 @@ form.addEventListener("input", function() {
 
     // Activation / désactivation du bouton
     button.disabled = notValide;
-
 });
 
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
 
-// -------------------------------------------------------------
-// 1. AFFICHAGE
-// Supprimez les cartes écrites à la main dans index.html et
-// construisez la grille à partir du tableau `creatures`.
-// -------------------------------------------------------------
-import { creatures } from "./data.js";
+    const articles = section.querySelectorAll(".card");
 
-let section = document.getElementById("grid");
-const AFFICHAGE = () =>{
-    creatures.forEach((pokemon) => {
-        section.innerHTML += `
-        <article data-id="${pokemon.id}" class="card flex flex-col gap-3 rounded-card bg-white p-3 pb-4 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
-          <div class="relative flex h-36 items-center justify-center rounded-xl bg-brand-light">
-            <img src="${pokemon.image}" alt="logo" class="h-[150px] w-[150px] text-muted">
-            <span class="absolute left-3 top-2 font-mono text-sm text-muted">${pokemon.id}</span>
-          </div>
-          <div class="flex items-center justify-between gap-2">
-            <h3 class="font-display text-xl font-semibold">${pokemon.name}</h3>
-            <span class="rounded-full bg-brand-light px-3 py-1 text-sm font-bold text-ink">${pokemon.type}</span>
-          </div>
-          <p class="text-sm text-muted">${pokemon.level} · Total 309</p>
-          <button type="button" class="btn-outline">Ajouter à l'équipe</button>
-        </article>`;
-    })
-}
-AFFICHAGE();
+    if (!articles) return;
 
-
-// -------------------------------------------------------------
-// 2. DÉTAIL
-// Un clic sur une carte ouvre le panneau de détail :
-// image, description, et statistiques affichées en barres.
-// -------------------------------------------------------------
-let cards = document.querySelectorAll(".card");
-
-let Section = document.getElementById("detail");
-Section.innerHTML ='<div class="text-center"><p class="font-display text-xl font-extrabold">Accune pokémon selecionnè .</p></div>';
-cards.forEach((card) => {
-    card.addEventListener("click", function(){
-
-        const isActive = card.classList.contains("active");
-
-        cards.forEach(a => {
-            a.classList.remove("active");
-        });
-
-        if(!isActive){
-            card.classList.add("active");
+    let dejaAjoute = false;
+    articles.forEach((article) => {
+        if (article.dataset.id === id.value) {
+            dejaAjoute = true;
         }
+    })
+    
 
-
-    let id = card.getAttribute("data-id");
-    creatures.forEach((pokemon) => {
-        if(pokemon.id === id){
-            Section.innerHTML =`<div class="flex items-center justify-between">
-            <span class="font-mono text-sm text-muted">${pokemon.id} · Détail</span>
-            <button type="button" aria-label="Fermer le détail" class="Annule btn-outline w-11 px-0">✕</button>
-          </div>
-          <div class="flex h-[155px] items-center justify-center rounded-2xl bg-brand-light">
-            <img src="${pokemon.image}" alt="logo" class="h-[170px] w-[170px] text-muted">
-          </div>
-          <div class="flex items-center justify-between">
-            <h2 class="font-display text-3xl font-extrabold">${pokemon.name}</h2>
-            <span class="rounded-full bg-brand-light px-3 py-1 text-sm font-bold">${pokemon.type}</span>
-          </div>
-          <p class="text-gray-700">${pokemon.description}.</p>
-          <div class="flex flex-col gap-2 text-sm">
-            <div class="grid grid-cols-[80px_1fr_40px] items-center gap-2"><span class="font-bold">PV</span><span class="h-3 rounded-full bg-ground"><span class="block h-3  rounded-full bg-brand" style="width: ${pokemon.stats.hp}%;"></span></span><span class="text-right font-mono">${pokemon.stats.hp}</span></div>
-            <div class="grid grid-cols-[80px_1fr_40px] items-center gap-2"><span class="font-bold">Attaque</span><span class="h-3 rounded-full bg-ground"><span class="block h-3  rounded-full bg-brand" style="width: ${pokemon.stats.attack}%;"></span></span><span class="text-right font-mono">${pokemon.stats.attack}</span></div>
-            <div class="grid grid-cols-[80px_1fr_40px] items-center gap-2"><span class="font-bold">Défense</span><span class="h-3 rounded-full bg-ground"><span class="block h-3  rounded-full bg-brand" style="width: ${pokemon.stats.defence}%;"></span></span><span class="text-right font-mono">${pokemon.stats.defence}</span></div>
-          </div>
-          <button type="button" class="btn-primary">Ajouter à l'équipe</button>`;
-        };
+    if (dejaAjoute) {
+        alert("This Pokémon Already Exist in Page .")
+        return;
+    }
+    creatures.push({
+        id: id.value,
+        name: name.value,
+        type: type.value,
+        level: level.value,
+        stats: {
+            hp: stat[0].value,
+            attack: stat[1].value,
+            defence: stat[2].value
+        },
+        image: image.value,
+        description: description.value
     });
 
-    let btn = document.querySelector(".Annule");
+    const article = document.createElement("article");
 
-    btn.addEventListener("click", function(){
-        Section.innerHTML ='<div class="text-center"><p class="font-display text-xl font-extrabold">Accune pokémon selecionnè .</p></div>';
-    })
+    article.dataset.id = id.value;
+    article.className = "card flex flex-col gap-3 rounded-card bg-white p-3 pb-4 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg";
+    
+    const typeColors = {
+    fire: "bg-red-500 text-white",
+    water: "bg-blue-500 text-white",
+    grass: "bg-green-500 text-white",
+    electric: "bg-yellow-400 text-black",
+    ice: "bg-cyan-300 text-black",
+    dark: "bg-gray-800 text-white",
+    poison: "bg-purple-500 text-white",
+    flying: "bg-sky-300 text-black",
+    bug: "bg-lime-500 text-black",
+    normal: "bg-stone-400 text-black",
+    fighting: "bg-orange-600 text-white",
+    psychic: "bg-pink-500 text-white",
+    ground: "bg-amber-600 text-white",
+    rock: "bg-yellow-700 text-white",
+    ghost: "bg-violet-800 text-white",
+    dragon: "bg-indigo-600 text-white",
+    steel: "bg-slate-400 text-black",
+    fairy: "bg-pink-300 text-black"
+};
+
+const typeColor = typeColors[type.value] || "bg-gray-200 text-black";
+
+    article.innerHTML = `
+        <div class="relative flex h-36 items-center justify-center rounded-xl bg-brand-light">
+            <img src="${image.value}" alt="${name.value}" class="h-[150px] w-[150px] object-contain">
+            <span class="absolute left-3 top-2 font-mono text-sm text-muted">${id.value}</span>
+        </div>
+
+        <div class="flex items-center justify-between gap-2">
+            <h3 class="font-display text-xl font-semibold">${name.value}</h3>
+            <span class="rounded-full px-3 py-1 text-sm font-bold ${typeColor}">${type.value}</span>
+        </div>
+
+        <p class="text-sm text-muted">${level.value} · Total 309</p>
+
+        <button type="button" class="btn-add-team btn-outline hover:bg-yellow-400 hover:text-black hover:border-red-600  hover:shadow-lg transition-all duration-300">
+                Ajouter à l'équipe
+            </button>
+    `;
+
+    section.append(article);
+
+    form.reset();
+    button.disabled = true;
 });
-
-});
-
-
-// -------------------------------------------------------------
-// 3. RECHERCHE
-// La liste se met à jour pendant la saisie d'un nom
-// (sans tenir compte des majuscules).
-// -------------------------------------------------------------
-
-
-// -------------------------------------------------------------
-// 4. FILTRE
-// Les boutons de type n'affichent que les créatures de ce type ;
-// « Tous » réinitialise le filtre.
-// La recherche et le filtre fonctionnent ENSEMBLE.
-// -------------------------------------------------------------
-
-
-// -------------------------------------------------------------
-// 5. CRÉER UNE CRÉATURE
-// Validez chaque champ du formulaire avec une expression régulière
-// (voir le tableau du brief). Affichez le message d'erreur sous le
-// champ, et n'ajoutez jamais une créature invalide.
-// -------------------------------------------------------------
-
 
 // -------------------------------------------------------------
 // 6. MON ÉQUIPE
 // Boutons « Ajouter à l'équipe » et « Retirer », gérés avec UN SEUL
 // écouteur sur la grille et UN SEUL sur l'équipe (délégation).
 // -------------------------------------------------------------
+
+
+function AfficherEquipe(pokemon){
+    const section = document.getElementById("team");
+    
+    if (!section) return;
+
+    const articles = section.querySelectorAll("article");;
+    let dejaAjoute = false;
+    articles.forEach((article) => {
+        if (article.dataset.id === pokemon.id) {
+            dejaAjoute = true;
+        }
+    })
+    
+
+    if (dejaAjoute) {
+        alert("This Pokémon Already Exist in my Team .");
+        return;
+    }
+
+    const article = document.createElement("article");
+
+    article.className = "flex flex-col gap-3 rounded-card bg-white p-2 pb-4";
+    article.dataset.id = pokemon.id;
+    
+    const typeColors = {
+    fire: "bg-red-500 text-white",
+    water: "bg-blue-500 text-white",
+    grass: "bg-green-500 text-white",
+    electric: "bg-yellow-400 text-black",
+    ice: "bg-cyan-300 text-black",
+    dark: "bg-gray-800 text-white",
+    poison: "bg-purple-500 text-white",
+    flying: "bg-sky-300 text-black",
+    bug: "bg-lime-500 text-black",
+    normal: "bg-stone-400 text-black",
+    fighting: "bg-orange-600 text-white",
+    psychic: "bg-pink-500 text-white",
+    ground: "bg-amber-600 text-white",
+    rock: "bg-yellow-700 text-white",
+    ghost: "bg-violet-800 text-white",
+    dragon: "bg-indigo-600 text-white",
+    steel: "bg-slate-400 text-black",
+    fairy: "bg-pink-300 text-black"
+};
+
+const typeColor = typeColors[pokemon.type] || "bg-gray-200 text-black";
+
+    article.innerHTML = `
+        <div class="relative flex h-[100px] items-center justify-center rounded-xl bg-brand-light">
+            <img src="${pokemon.image}" alt="logo" class="h-[90px] w-[90px] text-muted">
+            <span class="absolute left-3 top-2 font-mono text-sm text-muted">${pokemon.id}</span>
+            <span class="btn-delete absolute right-3 top-2 font-mono text-sm text-muted cursor-pointer">✕</span>
+        </div>
+        <div class="flex items-center justify-between gap-1">
+            <h3 class="font-display text-base font-semibold">${pokemon.name}</h3>
+            <span class="rounded-full px-3 py-1 text-sm font-bold ${typeColor}">${pokemon.type}</span>
+        </div>`;
+
+    section.append(article);
+    
+}
+
+function supprimerEquipe(id) {
+    const section = document.getElementById("team");
+
+    const article = section.querySelector(
+        `article[data-id="${id}"]`
+    );
+
+    if (article) {
+        article.remove();
+        
+    }
+}
+
+
+
+function updateTeamButtons() {
+    const count = team.querySelectorAll("article").length;
+    const addButtons = document.querySelectorAll(".btn-add-team");
+
+    addButtons.forEach(btn => {
+        btn.disabled = count >= 6;
+    });
+}
+
+// Supprimer un Pokémon de l'équipe
+team.addEventListener("click", function(e) {
+    const button = e.target.closest(".btn-delete");
+    
+    if (!button) return;
+
+    const article = button.closest("article");
+    
+    if (!article) return;
+
+    supprimerEquipe(article.dataset.id);
+
+    updateTeamButtons();
+});
+
+
 
 
 // -------------------------------------------------------------

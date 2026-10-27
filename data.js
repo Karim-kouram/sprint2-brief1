@@ -19,7 +19,7 @@
 export const creatures = [];
 
 const response = await fetch(
-  "https://pokeapi.co/api/v2/pokemon?limit=9"
+  "https://pokeapi.co/api/v2/pokemon?limit=21"
 );
 
 const data = await response.json();
